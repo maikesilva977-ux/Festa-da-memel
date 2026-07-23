@@ -118,7 +118,7 @@ function buscarConvidado(nomeDigitado, codigoDigitado) {
 
   for (const familia of listaFamilias) {
     const encontrado = familia.membros.some(
-      (membro) => normalizarTexto(extrairPrimeiroNome(membro.nome)) === nomeBusca
+      (membro) => normalizarTexto(extrairPrimeiroNome(membro.Nome)) === nomeBusca
     );
 
     if (encontrado) {
@@ -184,7 +184,7 @@ carregarFamilias()
     const detalhes = listaFamilias
       .map((f) => {
         const nomesDosMembros = f.membros
-          .map((m) => `"${m.nome}"`)
+          .map((m) => `"${m.Nome}"`)
           .join(", ");
         return `Família "${f.nomeFamilia}": ${nomesDosMembros}`;
       })
