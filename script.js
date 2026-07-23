@@ -2,9 +2,10 @@
 // script.js
 // Lógica do site principal (index.html):
 // - Carrega todas as famílias/membros do Firestore
-// - Busca o convidado pelo NOME COMPLETO + código de acesso
+// - Busca o convidado pelo PRIMEIRO NOME + código de acesso
 //   fixo (Tela 1)
-// - (Etapa 3) Vai exibir e salvar a confirmação (Tela 2)
+// - Mostra a Tela 2 com radio buttons e salva a confirmação
+//   de presença de cada membro no Firestore
 // =========================================================
 
 // Importa a instância do Firestore configurada em firebase.js
@@ -13,9 +14,15 @@ import { db } from "./firebase.js";
 // Importa as funções do Firestore que vamos usar:
 // collection -> referenciar uma coleção
 // getDocs -> buscar todos os documentos de uma coleção
+// doc -> referenciar um documento específico
+// updateDoc -> atualizar campos de um documento existente
+// serverTimestamp -> pega a data/hora atual do servidor do Firebase
 import {
   collection,
-  getDocs
+  getDocs,
+  doc,
+  updateDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // =========================================================
@@ -27,10 +34,11 @@ const CODIGO_ACESSO = "1608";
 
 // Variável que vai guardar, em memória, TODAS as famílias
 // e seus membros depois de carregados do Firestore.
-// Formato: [{ id, nomeFamilia, membros: [{ id, nome, confirmou, dataConfirmacao }] }]
+// Formato: [{ id, nomeFamilia, membros: [{ id, Nome, Confirmou }] }]
 let listaFamilias = [];
 
-// Guarda a família encontrada na busca, para usarmos na Tela 2 (próxima etapa)
+// Guarda a família encontrada na busca, para usarmos ao salvar
+// a confirmação na Tela 2.
 let familiaEncontrada = null;
 
 // Elementos da Tela 1
@@ -38,7 +46,16 @@ const inputNomeCompleto = document.getElementById("inputNomeCompleto");
 const inputCodigo = document.getElementById("inputCodigo");
 const btnEntrar = document.getElementById("btnEntrar");
 const mensagemErro = document.getElementById("mensagemErro");
-const diagnostico = document.getElementById("diagnostico");
+
+// Elementos das telas (para trocar entre Tela 1 e Tela 2)
+const tela1 = document.getElementById("tela1");
+const tela2 = document.getElementById("tela2");
+
+// Elementos da Tela 2
+const nomeFamiliaTitulo = document.getElementById("nomeFamiliaTitulo");
+const listaMembrosDiv = document.getElementById("listaMembros");
+const btnConfirmar = document.getElementById("btnConfirmar");
+const mensagemSucesso = document.getElementById("mensagemSucesso");
 
 // =========================================================
 // Função: normalizarTexto
@@ -101,8 +118,8 @@ async function carregarFamilias() {
 
 // =========================================================
 // Função: buscarConvidado
-// Procura, dentro de listaFamilias, um membro cujo nome
-// completo (normalizado) bata com o digitado. O código de
+// Procura, dentro de listaFamilias, um membro cujo primeiro
+// nome (normalizado) bata com o digitado. O código de
 // acesso é o mesmo para todos, então é comparado à parte,
 // com a constante CODIGO_ACESSO.
 // Retorna a família correspondente, ou null se não achar.
@@ -130,6 +147,52 @@ function buscarConvidado(nomeDigitado, codigoDigitado) {
 }
 
 // =========================================================
+// Função: mostrarTela2
+// Esconde a Tela 1, mostra a Tela 2, e gera dinamicamente
+// os radio buttons "Vai" / "Não vai" para cada membro
+// da família encontrada.
+// =========================================================
+function mostrarTela2(familia) {
+  // Troca de tela
+  tela1.classList.add("escondido");
+  tela1.classList.remove("ativa");
+  tela2.classList.remove("escondido");
+
+  // Mostra o nome da família no título
+  nomeFamiliaTitulo.textContent = familia.nomeFamilia;
+
+  // Limpa a lista de membros antes de gerar de novo
+  listaMembrosDiv.innerHTML = "";
+
+  // Para cada membro da família, cria um bloco com o nome
+  // e os 2 radio buttons (Vai / Não vai)
+  familia.membros.forEach((membro) => {
+    // Cria o elemento que vai conter o nome + radios desse membro
+    const blocoMembro = document.createElement("div");
+    blocoMembro.className = "membro-item";
+
+    // O "name" do radio precisa ser único por membro, para que
+    // cada pessoa tenha seu próprio grupo de opções (Vai/Não vai)
+    // sem interferir nos outros membros.
+    const nomeDoGrupoRadio = "membro_" + membro.id;
+
+    blocoMembro.innerHTML = `
+      <p class="nome-membro">${membro.Nome}</p>
+      <label class="opcao-radio">
+        <input type="radio" name="${nomeDoGrupoRadio}" value="vai" />
+        Vai
+      </label>
+      <label class="opcao-radio">
+        <input type="radio" name="${nomeDoGrupoRadio}" value="nao" />
+        Não vai
+      </label>
+    `;
+
+    listaMembrosDiv.appendChild(blocoMembro);
+  });
+}
+
+// =========================================================
 // Evento: clique no botão "Entrar"
 // =========================================================
 btnEntrar.addEventListener("click", () => {
@@ -138,7 +201,7 @@ btnEntrar.addEventListener("click", () => {
 
   // Validação simples: campos vazios
   if (nomeDigitado.trim() === "") {
-    mensagemErro.textContent = "Digite seu nome completo.";
+    mensagemErro.textContent = "Digite seu primeiro nome.";
     mensagemErro.classList.remove("escondido");
     return;
   }
@@ -153,19 +216,10 @@ btnEntrar.addEventListener("click", () => {
   const resultado = buscarConvidado(nomeDigitado, codigoDigitado);
 
   if (resultado) {
-    // Encontrado: guarda a família encontrada
+    // Encontrado: guarda a família encontrada e mostra a Tela 2
     familiaEncontrada = resultado;
     mensagemErro.classList.add("escondido");
-
-    // TEMPORÁRIO: por enquanto só avisamos no console.
-    // Na Etapa 3 vamos trocar isso por: mostrar a Tela 2
-    // com os membros da família em radio buttons.
-    console.log("Família encontrada:", familiaEncontrada);
-    alert(
-      "Família encontrada: " +
-        familiaEncontrada.nomeFamilia +
-        " (Tela 2 será construída na próxima etapa)"
-    );
+    mostrarTela2(familiaEncontrada);
   } else {
     // Não encontrado: mostra mensagem de erro padrão
     mensagemErro.textContent = "Nome não encontrado na lista de convidados.";
@@ -174,28 +228,70 @@ btnEntrar.addEventListener("click", () => {
 });
 
 // =========================================================
+// Evento: clique no botão "Confirmar presença" (Tela 2)
+// =========================================================
+btnConfirmar.addEventListener("click", async () => {
+  // Primeiro, verifica se TODOS os membros têm uma opção
+  // marcada (Vai ou Não vai). Se faltar algum, avisa e para.
+  for (const membro of familiaEncontrada.membros) {
+    const nomeDoGrupoRadio = "membro_" + membro.id;
+    const opcaoMarcada = document.querySelector(
+      `input[name="${nomeDoGrupoRadio}"]:checked`
+    );
+
+    if (!opcaoMarcada) {
+      alert(
+        "Por favor, marque 'Vai' ou 'Não vai' para todos os membros da família."
+      );
+      return; // para a execução, não salva nada ainda
+    }
+  }
+
+  // Desabilita o botão enquanto salva, para evitar cliques duplicados
+  btnConfirmar.disabled = true;
+  btnConfirmar.textContent = "Salvando...";
+
+  try {
+    // Para cada membro, salva a escolha no Firestore
+    for (const membro of familiaEncontrada.membros) {
+      const nomeDoGrupoRadio = "membro_" + membro.id;
+      const opcaoMarcada = document.querySelector(
+        `input[name="${nomeDoGrupoRadio}"]:checked`
+      );
+
+      // Referência do documento desse membro no Firestore
+      const referenciaDoMembro = doc(
+        db,
+        "Familias",
+        familiaEncontrada.id,
+        "membros",
+        membro.id
+      );
+
+      // Atualiza o documento com a confirmação e a data/hora atual
+      await updateDoc(referenciaDoMembro, {
+        Confirmou: opcaoMarcada.value === "vai",
+        DataConfirmacao: serverTimestamp()
+      });
+    }
+
+    // Depois de salvar tudo, esconde o formulário e mostra sucesso
+    listaMembrosDiv.classList.add("escondido");
+    btnConfirmar.classList.add("escondido");
+    mensagemSucesso.classList.remove("escondido");
+  } catch (erro) {
+    // Se der erro ao salvar, avisa o usuário e reabilita o botão
+    alert("Ocorreu um erro ao salvar sua confirmação: " + erro.message);
+    btnConfirmar.disabled = false;
+    btnConfirmar.textContent = "Confirmar presença";
+  }
+});
+
+// =========================================================
 // Ao carregar a página, já buscamos as famílias no Firestore
 // para que a busca do usuário seja instantânea (sem esperar
 // o Firestore no momento do clique).
 // =========================================================
-carregarFamilias()
-  .then(() => {
-    // DIAGNÓSTICO TEMPORÁRIO: mostra na tela o que foi carregado
-    const detalhes = listaFamilias
-      .map((f) => {
-        const nomesDosMembros = f.membros
-          .map((m) => `"${m.Nome}"`)
-          .join(", ");
-        return `Família "${f.nomeFamilia}": ${nomesDosMembros}`;
-      })
-      .join("\n");
-
-    diagnostico.textContent =
-      "DIAGNÓSTICO:\n" +
-      "Famílias carregadas: " + listaFamilias.length + "\n" +
-      (detalhes || "(nenhuma família encontrada)");
-  })
-  .catch((erro) => {
-    diagnostico.textContent = "ERRO ao carregar do Firestore: " + erro.message;
-    diagnostico.style.color = "#e53935";
-  });
+carregarFamilias().catch((erro) => {
+  console.error("Erro ao carregar famílias do Firestore:", erro);
+});
