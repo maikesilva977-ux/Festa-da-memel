@@ -1,0 +1,89 @@
+/* =========================================================
+   style.css
+   Versão BÁSICA e PROVISÓRIA, apenas para estruturar o
+   layout e testar as telas.
+   O tema visual completo da Magali (cores, frutas, confetes,
+   animações) será feito na Etapa 4.
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* Esconde as telas que não estão ativas no momento */
+.escondido {
+  display: none;
+}
+
+.tela {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.cartao {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.mensagem {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #43a047;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.erro {
+  color: #e53935;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.sucesso {
+  color: #43a047;
+  font-weight: bold;
+  margin-top: 12px;
+}

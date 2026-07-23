@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2 Anos da Memel - Confirme sua presença</title>
+
+  <!-- Folha de estilos do site -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================= -->
+  <!-- TELA 1 - Busca do convidado   -->
+  <!-- ============================= -->
+  <section id="tela1" class="tela ativa">
+    <div class="cartao">
+      <h1>2 Anos da Memel</h1>
+
+      <p class="mensagem">
+        Estamos muito felizes em compartilhar esse momento com você!<br><br>
+        Para prepararmos tudo com muito carinho, precisamos saber exatamente
+        quem poderá comparecer.<br><br>
+        Digite abaixo seu primeiro nome e o código de acesso que você
+        recebeu no convite.
+      </p>
+
+      <!-- Campo onde o convidado digita o primeiro nome -->
+      <input
+        type="text"
+        id="inputNomeCompleto"
+        placeholder="Seu primeiro nome"
+        autocomplete="off"
+      />
+
+      <!-- Campo onde o convidado digita o código de acesso -->
+      <input
+        type="tel"
+        id="inputCodigo"
+        placeholder="Código de acesso"
+        maxlength="4"
+        inputmode="numeric"
+        autocomplete="off"
+      />
+
+      <!-- Botão que dispara a busca -->
+      <button id="btnEntrar">Entrar</button>
+
+      <!-- Mensagem de erro, escondida por padrão -->
+      <p id="mensagemErro" class="erro escondido">
+        Nome não encontrado na lista de convidados.
+      </p>
+
+      <!-- Área de diagnóstico temporária (vamos remover depois que tudo funcionar) -->
+      <div
+        id="diagnostico"
+        style="margin-top:20px; text-align:left; font-size:12px; background:#f0f0f0; padding:10px; border-radius:8px; white-space:pre-wrap;"
+      ></div>
+    </div>
+  </section>
+
+  <!-- ============================= -->
+  <!-- TELA 2 - Confirmação família  -->
+  <!-- (será preenchida na Etapa 3)  -->
+  <!-- ============================= -->
+  <section id="tela2" class="tela escondido">
+    <div class="cartao">
+      <h2 id="nomeFamiliaTitulo"></h2>
+
+      <!-- Aqui vamos gerar dinamicamente a lista de membros -->
+      <div id="listaMembros"></div>
+
+      <button id="btnConfirmar">Confirmar presença</button>
+
+      <p id="mensagemSucesso" class="sucesso escondido">
+        Presença confirmada com sucesso! Obrigado 💚
+      </p>
+    </div>
+  </section>
+
+  <!-- Script principal do site (type="module" porque usamos import/export) -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
