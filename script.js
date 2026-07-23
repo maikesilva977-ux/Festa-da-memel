@@ -71,8 +71,9 @@ function extrairPrimeiroNome(nomeCompleto) {
 async function carregarFamilias() {
   listaFamilias = []; // zera a lista antes de carregar
 
-  // Pega todos os documentos da coleção "familias"
-  const familiasSnapshot = await getDocs(collection(db, "familias"));
+  // Pega todos os documentos da coleção "Familias"
+  // (nome exato como está cadastrado no Firestore, com F maiúsculo)
+  const familiasSnapshot = await getDocs(collection(db, "Familias"));
 
   // Para cada família encontrada, buscamos seus membros também
   for (const familiaDoc of familiasSnapshot.docs) {
@@ -80,7 +81,7 @@ async function carregarFamilias() {
 
     // Busca a subcoleção "membros" dentro desta família
     const membrosSnapshot = await getDocs(
-      collection(db, "familias", familiaDoc.id, "membros")
+      collection(db, "Familias", familiaDoc.id, "membros")
     );
 
     // Monta a lista de membros dessa família
