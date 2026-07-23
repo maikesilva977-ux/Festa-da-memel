@@ -87,3 +87,31 @@ button:hover {
   font-weight: bold;
   margin-top: 12px;
 }
+
+/* Bloco de cada membro na Tela 2 */
+.membro-item {
+  text-align: left;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.nome-membro {
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+
+.opcao-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 20px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.opcao-radio input[type="radio"] {
+  width: 18px;
+  height: 18px;
+}
