@@ -286,6 +286,10 @@ button:disabled {
   color: #F9A825;
 }
 
+.card-cinza .card-valor {
+  color: #757575;
+}
+
 /* Tabela de convidados */
 .tabela-convidados {
   width: 100%;
@@ -315,6 +319,11 @@ button:disabled {
 
 .status-nao-confirmado {
   color: #E53935;
+  font-weight: 600;
+}
+
+.status-sem-confirmacao {
+  color: #757575;
   font-weight: 600;
 }
 
