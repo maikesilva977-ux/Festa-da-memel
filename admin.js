@@ -50,7 +50,12 @@ const cardTotalFamilias = document.getElementById("cardTotalFamilias");
 const cardTotalConvidados = document.getElementById("cardTotalConvidados");
 const cardConfirmados = document.getElementById("cardConfirmados");
 const cardNaoConfirmados = document.getElementById("cardNaoConfirmados");
+const cardSemConfirmacao = document.getElementById("cardSemConfirmacao");
 const cardPercentual = document.getElementById("cardPercentual");
+const cardCriancas = document.getElementById("cardCriancas");
+const cardConfirmadosSemCriancas = document.getElementById(
+  "cardConfirmadosSemCriancas"
+);
 
 // Elemento onde as linhas da tabela são inseridas
 const corpoTabelaConvidados = document.getElementById("corpoTabelaConvidados");
@@ -113,6 +118,14 @@ function montarListaDeConvidados() {
       nomeFamilia: familia.nomeFamilia,
       nome: membro.Nome,
       confirmou: membro.Confirmou === true,
+      // "respondeu" indica se a pessoa já usou o link ao menos
+      // uma vez (existe DataConfirmacao). Se nunca respondeu,
+      // Confirmou pode estar "false" só por ser o valor padrão
+      // cadastrado manualmente, então não confundimos os dois.
+      respondeu: !!membro.DataConfirmacao,
+      // Se o campo MenorDe10 não existir no Firestore, tratamos
+      // como false (ou seja, conta como adulto/criança maior)
+      menorDe10: membro.MenorDe10 === true,
       // Converte o Timestamp do Firestore para um objeto Date
       // do JavaScript (ou null, se ainda não confirmou)
       dataConfirmacao: membro.DataConfirmacao
@@ -148,6 +161,21 @@ function atualizarDashboard() {
   cardConfirmados.textContent = totalConfirmados;
   cardNaoConfirmados.textContent = totalNaoConfirmados;
   cardPercentual.textContent = percentual + "%";
+
+  // Quantidade de crianças menores de 10 anos (não contam para
+  // o planejamento final da festa, mas ainda aparecem na tabela)
+  const totalCriancas = todosOsConvidados.filter(
+    (convidado) => convidado.menorDe10 === true
+  ).length;
+
+  // Confirmados que "contam de verdade": confirmaram presença
+  // E não são crianças menores de 10 anos
+  const totalConfirmadosSemCriancas = todosOsConvidados.filter(
+    (convidado) => convidado.confirmou === true && convidado.menorDe10 !== true
+  ).length;
+
+  cardCriancas.textContent = totalCriancas;
+  cardConfirmadosSemCriancas.textContent = totalConfirmadosSemCriancas;
 }
 
 // =========================================================
@@ -252,9 +280,14 @@ function renderizarTabela(lista) {
       : "status-nao-confirmado";
     const textoStatus = convidado.confirmou ? "Confirmado" : "Não confirmado";
 
+    // Se for criança menor de 10 anos, adiciona a etiqueta ao lado do nome
+    const etiquetaCrianca = convidado.menorDe10
+      ? ' <span style="font-size:12px; color:#F9A825;">👶 Criança</span>'
+      : "";
+
     linha.innerHTML = `
       <td>${convidado.nomeFamilia}</td>
-      <td>${convidado.nome}</td>
+      <td>${convidado.nome}${etiquetaCrianca}</td>
       <td class="${classeStatus}">${textoStatus}</td>
       <td>${formatarData(convidado.dataConfirmacao)}</td>
     `;
@@ -285,6 +318,7 @@ function gerarArquivoExcel(lista, nomeDoArquivo) {
   const dadosDaPlanilha = lista.map((convidado) => ({
     Família: convidado.nomeFamilia,
     Pessoa: convidado.nome,
+    "Criança (<10)": convidado.menorDe10 ? "Sim" : "Não",
     Status: convidado.confirmou ? "Confirmado" : "Não confirmado",
     "Data confirmação": formatarData(convidado.dataConfirmacao)
   }));
