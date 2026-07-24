@@ -233,3 +233,55 @@ button:disabled {
     transform: translateY(110vh) rotate(360deg);
   }
 }
+
+/* =========================================================
+   PAINEL ADMIN - Dashboard
+   ========================================================= */
+
+/* Cartão mais largo, usado no painel admin (cabe os cards) */
+.cartao-largo {
+  max-width: 900px;
+}
+
+/* Grade de cards do dashboard: quebra linha sozinha em telas pequenas */
+.cards-dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.card-numero {
+  background-color: #fffdf5;
+  border: 2px solid #ffe082;
+  border-radius: 16px;
+  padding: 16px 20px;
+  min-width: 120px;
+  flex: 1 1 140px;
+}
+
+.card-valor {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.card-label {
+  font-size: 13px;
+  color: #777;
+  margin: 4px 0 0 0;
+}
+
+.card-verde .card-valor {
+  color: #43A047;
+}
+
+.card-vermelho .card-valor {
+  color: #E53935;
+}
+
+.card-amarelo .card-valor {
+  color: #F9A825;
+}
