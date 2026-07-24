@@ -6,7 +6,7 @@
   <title>Painel Admin - 2 Anos da Memel</title>
 
   <!-- Usa a mesma folha de estilos do site principal, para manter o visual consistente -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
 
@@ -88,13 +88,64 @@
         </div>
       </div>
 
+      <!-- Filtros e ordenação -->
+      <div class="filtros-container">
+        <input
+          type="text"
+          id="filtroNome"
+          placeholder="Buscar por nome..."
+          class="filtro-input"
+        />
+        <input
+          type="text"
+          id="filtroFamilia"
+          placeholder="Buscar por família..."
+          class="filtro-input"
+        />
+        <select id="filtroStatus" class="filtro-select">
+          <option value="todos">Todos</option>
+          <option value="confirmados">Só confirmados</option>
+          <option value="nao-confirmados">Só não confirmados</option>
+        </select>
+        <select id="ordenarPor" class="filtro-select">
+          <option value="familia">Ordenar por Família</option>
+          <option value="nome">Ordenar por Nome</option>
+          <option value="data">Ordenar por Data</option>
+        </select>
+      </div>
+
+      <!-- Botão de exportar para Excel -->
+      <button id="btnExportarExcel" class="botao-secundario">
+        📊 Exportar Excel
+      </button>
+
+      <!-- Tabela com a lista detalhada de convidados -->
+      <div style="overflow-x:auto;">
+        <table id="tabelaConvidados" class="tabela-convidados">
+          <thead>
+            <tr>
+              <th>Família</th>
+              <th>Pessoa</th>
+              <th>Status</th>
+              <th>Data confirmação</th>
+            </tr>
+          </thead>
+          <tbody id="corpoTabelaConvidados">
+            <!-- As linhas são geradas dinamicamente pelo admin.js -->
+          </tbody>
+        </table>
+      </div>
+
       <!-- Botão de sair (logout) -->
       <button id="btnSair">Sair</button>
     </div>
   </section>
 
+  <!-- Biblioteca para gerar arquivos Excel (.xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <!-- Script do painel admin (type="module" porque usa import/export do Firebase) -->
-  <script type="module" src="admin.js"></script>
+  <script type="module" src="admin.js?v=4"></script>
 
   <!-- Script decorativo dos confetes (mesmo do index.html) -->
   <script src="confete.js"></script>
