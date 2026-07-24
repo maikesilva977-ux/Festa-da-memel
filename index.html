@@ -78,6 +78,12 @@
 
       <button id="btnConfirmar">Confirmar presença</button>
 
+      <!-- Mensagem exibida quando o prazo de confirmação já passou -->
+      <p id="mensagemPrazoEncerrado" class="erro escondido">
+        ⏰ O prazo para confirmação de presença já foi encerrado.
+        Entre em contato diretamente para verificar sua presença.
+      </p>
+
       <p id="mensagemSucesso" class="sucesso escondido">
         Presença confirmada com sucesso! Obrigado 💚
       </p>
@@ -85,7 +91,7 @@
   </section>
 
   <!-- Script principal do site (type="module" porque usamos import/export) -->
-  <script type="module" src="script.js?v=2"></script>
+  <script type="module" src="script.js?v=3"></script>
 
   <!-- Script decorativo dos confetes (não precisa de type="module") -->
   <script src="confete.js"></script>
@@ -93,4 +99,5 @@
   <!-- Script do contador regressivo até a festa -->
   <script src="contador.js"></script>
 </body>
-</html>
+  </html>
+  
