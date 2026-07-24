@@ -176,14 +176,22 @@ function mostrarTela2(familia) {
     // sem interferir nos outros membros.
     const nomeDoGrupoRadio = "membro_" + membro.id;
 
+    // Se o membro já tiver confirmado antes (identificado pela
+    // existência do campo DataConfirmacao), marcamos o radio
+    // correspondente à resposta salva, para não aparecer em
+    // branco caso a pessoa volte no link depois.
+    const jaRespondeu = !!membro.DataConfirmacao;
+    const vaiEstaMarcado = jaRespondeu && membro.Confirmou === true;
+    const naoVaiEstaMarcado = jaRespondeu && membro.Confirmou === false;
+
     blocoMembro.innerHTML = `
       <p class="nome-membro">${membro.Nome}</p>
       <label class="opcao-radio">
-        <input type="radio" name="${nomeDoGrupoRadio}" value="vai" />
+        <input type="radio" name="${nomeDoGrupoRadio}" value="vai" ${vaiEstaMarcado ? "checked" : ""} />
         Vai
       </label>
       <label class="opcao-radio">
-        <input type="radio" name="${nomeDoGrupoRadio}" value="nao" />
+        <input type="radio" name="${nomeDoGrupoRadio}" value="nao" ${naoVaiEstaMarcado ? "checked" : ""} />
         Não vai
       </label>
     `;
