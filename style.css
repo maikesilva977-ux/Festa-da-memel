@@ -318,6 +318,48 @@ button:disabled {
   font-weight: 600;
 }
 
+/* =========================================================
+   RESPONSIVIDADE - Tablet e Computador
+   Em telas maiores, aproveitamos melhor o espaço: título
+   maior, cards com largura mais controlada, e o cartão
+   principal ganha um pouco mais de respiro.
+   ========================================================= */
+@media (min-width: 600px) {
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  .cartao {
+    padding: 40px 36px;
+  }
+
+  .card-numero {
+    flex: 0 1 160px;
+  }
+}
+
+@media (min-width: 900px) {
+  .cartao-largo {
+    max-width: 1000px;
+  }
+
+  .filtros-container {
+    flex-wrap: nowrap;
+  }
+}
+
+/* Em telas muito pequenas (celulares antigos/estreitos),
+   reduzimos um pouco o padding para não desperdiçar espaço */
+@media (max-width: 360px) {
+  .cartao {
+    padding: 20px 14px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+}
+
 /* Filtros e ordenação */
 .filtros-container {
   display: flex;
