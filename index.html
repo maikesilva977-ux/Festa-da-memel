@@ -10,12 +10,21 @@
 </head>
 <body>
 
+  <!-- Frutinhas decorativas espalhadas pelos cantos (efeito visual, sem interferir na função do site) -->
+  <div class="fruta-decorativa fruta-1">🍉</div>
+  <div class="fruta-decorativa fruta-2">🍌</div>
+  <div class="fruta-decorativa fruta-3">🍎</div>
+  <div class="fruta-decorativa fruta-4">🍈</div>
+
+  <!-- Container onde os confetes caem (preenchido via JS) -->
+  <div id="confete-container"></div>
+
   <!-- ============================= -->
   <!-- TELA 1 - Busca do convidado   -->
   <!-- ============================= -->
   <section id="tela1" class="tela ativa">
     <div class="cartao">
-      <h1>2 Anos da Memel</h1>
+      <h1>🎉 2 Anos da Memel 🎉</h1>
 
       <p class="mensagem">
         Estamos muito felizes em compartilhar esse momento com você!<br><br>
@@ -74,5 +83,8 @@
 
   <!-- Script principal do site (type="module" porque usamos import/export) -->
   <script type="module" src="script.js?v=2"></script>
+
+  <!-- Script decorativo dos confetes (não precisa de type="module") -->
+  <script src="confete.js"></script>
 </body>
 </html>
