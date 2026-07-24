@@ -38,6 +38,13 @@ body {
   z-index: 2; /* fica acima das frutas e confetes */
 }
 
+/* Regra mais específica: garante que uma tela com a classe
+   "escondido" fique sempre escondida, mesmo tendo a classe
+   "tela" também (que por si só deixaria visível). */
+.tela.escondido {
+  display: none;
+}
+
 .cartao {
   background-color: #ffffff;
   border-radius: 28px;
