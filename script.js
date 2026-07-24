@@ -32,6 +32,13 @@ import {
 // =========================================================
 const CODIGO_ACESSO = "1608";
 
+// Data e horário limite para confirmação de presença.
+// Depois desse momento, os convidados não conseguem mais
+// marcar/alterar a resposta (mas ainda veem o que já foi salvo).
+// Formato: ano, mês [0-11], dia, hora, minuto, segundo.
+// Mês 7 = Agosto (lembrando que Janeiro é 0).
+const DATA_LIMITE_CONFIRMACAO = new Date(2026, 7, 5, 23, 59, 59);
+
 // Variável que vai guardar, em memória, TODAS as famílias
 // e seus membros depois de carregados do Firestore.
 // Formato: [{ id, nomeFamilia, membros: [{ id, Nome, Confirmou }] }]
@@ -56,6 +63,7 @@ const nomeFamiliaTitulo = document.getElementById("nomeFamiliaTitulo");
 const listaMembrosDiv = document.getElementById("listaMembros");
 const btnConfirmar = document.getElementById("btnConfirmar");
 const mensagemSucesso = document.getElementById("mensagemSucesso");
+const mensagemPrazoEncerrado = document.getElementById("mensagemPrazoEncerrado");
 
 // =========================================================
 // Função: normalizarTexto
@@ -198,6 +206,29 @@ function mostrarTela2(familia) {
 
     listaMembrosDiv.appendChild(blocoMembro);
   });
+
+  // =========================================================
+  // Verifica se o prazo de confirmação já passou.
+  // Se sim: desabilita todos os radios (não dá mais pra mudar
+  // a resposta) e esconde o botão de confirmar, mostrando a
+  // mensagem de prazo encerrado no lugar.
+  // =========================================================
+  const prazoJaEncerrou = new Date() > DATA_LIMITE_CONFIRMACAO;
+
+  if (prazoJaEncerrou) {
+    const todosOsRadios = listaMembrosDiv.querySelectorAll(
+      'input[type="radio"]'
+    );
+    todosOsRadios.forEach((radio) => {
+      radio.disabled = true;
+    });
+
+    btnConfirmar.classList.add("escondido");
+    mensagemPrazoEncerrado.classList.remove("escondido");
+  } else {
+    btnConfirmar.classList.remove("escondido");
+    mensagemPrazoEncerrado.classList.add("escondido");
+  }
 }
 
 // =========================================================
@@ -239,6 +270,13 @@ btnEntrar.addEventListener("click", () => {
 // Evento: clique no botão "Confirmar presença" (Tela 2)
 // =========================================================
 btnConfirmar.addEventListener("click", async () => {
+  // Proteção extra: mesmo que alguém tente burlar o botão escondido,
+  // o código confere de novo se o prazo já passou antes de salvar.
+  if (new Date() > DATA_LIMITE_CONFIRMACAO) {
+    alert("O prazo para confirmação de presença já foi encerrado.");
+    return;
+  }
+
   // Primeiro, verifica se TODOS os membros têm uma opção
   // marcada (Vai ou Não vai). Se faltar algum, avisa e para.
   for (const membro of familiaEncontrada.membros) {
