@@ -59,17 +59,34 @@
 
   <!-- ============================= -->
   <!-- PAINEL (Dashboard)           -->
-  <!-- Esqueleto por enquanto, o    -->
-  <!-- conteúdo real vem na Etapa 6 -->
   <!-- ============================= -->
   <section id="telaPainel" class="tela escondido">
-    <div class="cartao">
+    <div class="cartao cartao-largo">
       <h2>Painel de Confirmações</h2>
 
-      <p class="mensagem">
-        Bem-vinda(o)! O dashboard com os cards, tabela de convidados,
-        filtros e exportação será construído na próxima etapa.
-      </p>
+      <!-- Cards com os números gerais -->
+      <div id="cardsDashboard" class="cards-dashboard">
+        <div class="card-numero">
+          <p class="card-valor" id="cardTotalFamilias">-</p>
+          <p class="card-label">Famílias</p>
+        </div>
+        <div class="card-numero">
+          <p class="card-valor" id="cardTotalConvidados">-</p>
+          <p class="card-label">Convidados</p>
+        </div>
+        <div class="card-numero card-verde">
+          <p class="card-valor" id="cardConfirmados">-</p>
+          <p class="card-label">Confirmados</p>
+        </div>
+        <div class="card-numero card-vermelho">
+          <p class="card-valor" id="cardNaoConfirmados">-</p>
+          <p class="card-label">Não Confirmados</p>
+        </div>
+        <div class="card-numero card-amarelo">
+          <p class="card-valor" id="cardPercentual">-</p>
+          <p class="card-label">% Confirmação</p>
+        </div>
+      </div>
 
       <!-- Botão de sair (logout) -->
       <button id="btnSair">Sair</button>
