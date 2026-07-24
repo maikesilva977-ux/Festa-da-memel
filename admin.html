@@ -82,9 +82,21 @@
           <p class="card-valor" id="cardNaoConfirmados">-</p>
           <p class="card-label">Não Confirmados</p>
         </div>
+        <div class="card-numero card-cinza">
+          <p class="card-valor" id="cardSemConfirmacao">-</p>
+          <p class="card-label">Sem Confirmação</p>
+        </div>
         <div class="card-numero card-amarelo">
           <p class="card-valor" id="cardPercentual">-</p>
           <p class="card-label">% Confirmação</p>
+        </div>
+        <div class="card-numero">
+          <p class="card-valor" id="cardCriancas">-</p>
+          <p class="card-label">Crianças (&lt;10 anos)</p>
+        </div>
+        <div class="card-numero card-verde">
+          <p class="card-valor" id="cardConfirmadosSemCriancas">-</p>
+          <p class="card-label">Confirmados (sem crianças)</p>
         </div>
       </div>
 
@@ -106,6 +118,7 @@
           <option value="todos">Todos</option>
           <option value="confirmados">Só confirmados</option>
           <option value="nao-confirmados">Só não confirmados</option>
+          <option value="sem-confirmacao">Só sem confirmação</option>
         </select>
         <select id="ordenarPor" class="filtro-select">
           <option value="familia">Ordenar por Família</option>
@@ -150,7 +163,7 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- Script do painel admin (type="module" porque usa import/export do Firebase) -->
-  <script type="module" src="admin.js?v=5"></script>
+  <script type="module" src="admin.js?v=6"></script>
 
   <!-- Script decorativo dos confetes (mesmo do index.html) -->
   <script src="confete.js"></script>
