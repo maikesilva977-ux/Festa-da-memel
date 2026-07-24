@@ -61,6 +61,7 @@ const filtroFamilia = document.getElementById("filtroFamilia");
 const filtroStatus = document.getElementById("filtroStatus");
 const ordenarPor = document.getElementById("ordenarPor");
 const btnExportarExcel = document.getElementById("btnExportarExcel");
+const btnExportarConfirmados = document.getElementById("btnExportarConfirmados");
 
 // Guarda, em memória, todas as famílias e membros carregados
 // do Firestore (formato igual ao usado no script.js)
@@ -274,29 +275,48 @@ function aplicarFiltrosEOrdenacao() {
 }
 
 // =========================================================
-// Função: exportarParaExcel
-// Gera um arquivo .xlsx com a lista atualmente filtrada/
-// ordenada na tela, usando a biblioteca SheetJS (XLSX).
+// Função: gerarArquivoExcel
+// Recebe uma lista de convidados já pronta e gera o arquivo
+// .xlsx a partir dela. Usada tanto pela exportação "normal"
+// (respeitando os filtros da tela) quanto pela exportação
+// "só confirmados" (que ignora os filtros da tela).
 // =========================================================
-function exportarParaExcel() {
-  const listaParaExportar = obterListaFiltradaEOrdenada();
-
-  // Monta os dados no formato de planilha: um array de objetos,
-  // onde cada chave vira uma coluna
-  const dadosDaPlanilha = listaParaExportar.map((convidado) => ({
+function gerarArquivoExcel(lista, nomeDoArquivo) {
+  const dadosDaPlanilha = lista.map((convidado) => ({
     Família: convidado.nomeFamilia,
     Pessoa: convidado.nome,
     Status: convidado.confirmou ? "Confirmado" : "Não confirmado",
     "Data confirmação": formatarData(convidado.dataConfirmacao)
   }));
 
-  // Cria a planilha e o arquivo Excel
   const planilha = XLSX.utils.json_to_sheet(dadosDaPlanilha);
   const arquivo = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(arquivo, planilha, "Convidados");
 
-  // Faz o download do arquivo no celular/computador do admin
-  XLSX.writeFile(arquivo, "confirmacoes-2-anos-da-memel.xlsx");
+  XLSX.writeFile(arquivo, nomeDoArquivo);
+}
+
+// =========================================================
+// Função: exportarParaExcel
+// Exporta a lista respeitando os filtros/ordenação que
+// estiverem ativos na tela no momento.
+// =========================================================
+function exportarParaExcel() {
+  const listaParaExportar = obterListaFiltradaEOrdenada();
+  gerarArquivoExcel(listaParaExportar, "confirmacoes-2-anos-da-memel.xlsx");
+}
+
+// =========================================================
+// Função: exportarApenasConfirmados
+// Exporta SOMENTE quem confirmou presença (Confirmou = true),
+// independente do filtro de status que estiver selecionado
+// na tela no momento.
+// =========================================================
+function exportarApenasConfirmados() {
+  const apenasConfirmados = todosOsConvidados.filter(
+    (convidado) => convidado.confirmou === true
+  );
+  gerarArquivoExcel(apenasConfirmados, "confirmados-2-anos-da-memel.xlsx");
 }
 
 // =========================================================
@@ -310,6 +330,9 @@ ordenarPor.addEventListener("change", aplicarFiltrosEOrdenacao);
 
 // Evento do botão de exportar
 btnExportarExcel.addEventListener("click", exportarParaExcel);
+
+// Evento do botão de exportar apenas confirmados
+btnExportarConfirmados.addEventListener("click", exportarApenasConfirmados);
 
 // =========================================================
 // Evento: clique no botão "Entrar" (login)
