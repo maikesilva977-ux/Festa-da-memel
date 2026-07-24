@@ -114,10 +114,15 @@
         </select>
       </div>
 
-      <!-- Botão de exportar para Excel -->
-      <button id="btnExportarExcel" class="botao-secundario">
-        📊 Exportar Excel
-      </button>
+      <!-- Botões de exportar para Excel -->
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="btnExportarExcel" class="botao-secundario">
+          📊 Exportar Excel
+        </button>
+        <button id="btnExportarConfirmados" class="botao-secundario">
+          ✅ Exportar só confirmados
+        </button>
+      </div>
 
       <!-- Tabela com a lista detalhada de convidados -->
       <div style="overflow-x:auto;">
@@ -145,7 +150,7 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- Script do painel admin (type="module" porque usa import/export do Firebase) -->
-  <script type="module" src="admin.js?v=4"></script>
+  <script type="module" src="admin.js?v=5"></script>
 
   <!-- Script decorativo dos confetes (mesmo do index.html) -->
   <script src="confete.js"></script>
