@@ -285,3 +285,61 @@ button:disabled {
 .card-amarelo .card-valor {
   color: #F9A825;
 }
+
+/* Tabela de convidados */
+.tabela-convidados {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.tabela-convidados th,
+.tabela-convidados td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0e6c8;
+  white-space: nowrap;
+}
+
+.tabela-convidados th {
+  background-color: #fffdf5;
+  color: #555;
+  font-weight: 600;
+}
+
+.status-confirmado {
+  color: #43A047;
+  font-weight: 600;
+}
+
+.status-nao-confirmado {
+  color: #E53935;
+  font-weight: 600;
+}
+
+/* Filtros e ordenação */
+.filtros-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.filtro-input,
+.filtro-select {
+  flex: 1 1 160px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: 'Fredoka', sans-serif;
+  border: 2px solid #ffe082;
+  border-radius: 12px;
+  background-color: #fffdf5;
+}
+
+/* Botão secundário (amarelo), usado no "Exportar Excel" */
+.botao-secundario {
+  background-color: #F9A825;
+  box-shadow: 0 4px 12px rgba(249, 168, 37, 0.35);
+  margin-bottom: 16px;
+}
