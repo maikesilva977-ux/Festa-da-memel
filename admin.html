@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Admin - 2 Anos da Memel</title>
+
+  <!-- Usa a mesma folha de estilos do site principal, para manter o visual consistente -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Frutinhas decorativas, iguais ao index.html -->
+  <div class="fruta-decorativa fruta-1">🍉</div>
+  <div class="fruta-decorativa fruta-2">🍌</div>
+  <div class="fruta-decorativa fruta-3">🍎</div>
+  <div class="fruta-decorativa fruta-4">🍈</div>
+
+  <!-- Container onde os confetes caem -->
+  <div id="confete-container"></div>
+
+  <!-- ============================= -->
+  <!-- TELA DE LOGIN                -->
+  <!-- ============================= -->
+  <section id="telaLogin" class="tela ativa">
+    <div class="cartao">
+      <h1>🔑 Painel Admin</h1>
+
+      <p class="mensagem">
+        Entre com seu e-mail e senha de administrador para acessar
+        o painel de confirmações.
+      </p>
+
+      <!-- Campo de e-mail -->
+      <input
+        type="email"
+        id="inputEmail"
+        placeholder="E-mail"
+        autocomplete="off"
+      />
+
+      <!-- Campo de senha -->
+      <input
+        type="password"
+        id="inputSenha"
+        placeholder="Senha"
+        autocomplete="off"
+      />
+
+      <!-- Botão que dispara o login -->
+      <button id="btnLogin">Entrar</button>
+
+      <!-- Mensagem de erro, escondida por padrão -->
+      <p id="mensagemErroLogin" class="erro escondido">
+        E-mail ou senha inválidos.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================= -->
+  <!-- PAINEL (Dashboard)           -->
+  <!-- Esqueleto por enquanto, o    -->
+  <!-- conteúdo real vem na Etapa 6 -->
+  <!-- ============================= -->
+  <section id="telaPainel" class="tela escondido">
+    <div class="cartao">
+      <h2>Painel de Confirmações</h2>
+
+      <p class="mensagem">
+        Bem-vinda(o)! O dashboard com os cards, tabela de convidados,
+        filtros e exportação será construído na próxima etapa.
+      </p>
+
+      <!-- Botão de sair (logout) -->
+      <button id="btnSair">Sair</button>
+    </div>
+  </section>
+
+  <!-- Script do painel admin (type="module" porque usa import/export do Firebase) -->
+  <script type="module" src="admin.js"></script>
+
+  <!-- Script decorativo dos confetes (mesmo do index.html) -->
+  <script src="confete.js"></script>
+</body>
+</html>
