@@ -146,10 +146,18 @@ function atualizarDashboard() {
   const totalConvidados = todosOsConvidados.length;
 
   const totalConfirmados = todosOsConvidados.filter(
-    (convidado) => convidado.confirmou === true
+    (convidado) => convidado.respondeu && convidado.confirmou === true
   ).length;
 
-  const totalNaoConfirmados = totalConvidados - totalConfirmados;
+  // Não confirmados = já respondeu, mas marcou "não vai"
+  const totalNaoConfirmados = todosOsConvidados.filter(
+    (convidado) => convidado.respondeu && convidado.confirmou === false
+  ).length;
+
+  // Sem confirmação = ainda não usou o link nenhuma vez
+  const totalSemConfirmacao = todosOsConvidados.filter(
+    (convidado) => !convidado.respondeu
+  ).length;
 
   const percentual =
     totalConvidados > 0
@@ -160,6 +168,7 @@ function atualizarDashboard() {
   cardTotalConvidados.textContent = totalConvidados;
   cardConfirmados.textContent = totalConfirmados;
   cardNaoConfirmados.textContent = totalNaoConfirmados;
+  cardSemConfirmacao.textContent = totalSemConfirmacao;
   cardPercentual.textContent = percentual + "%";
 
   // Quantidade de crianças menores de 10 anos (não contam para
@@ -171,7 +180,10 @@ function atualizarDashboard() {
   // Confirmados que "contam de verdade": confirmaram presença
   // E não são crianças menores de 10 anos
   const totalConfirmadosSemCriancas = todosOsConvidados.filter(
-    (convidado) => convidado.confirmou === true && convidado.menorDe10 !== true
+    (convidado) =>
+      convidado.respondeu &&
+      convidado.confirmou === true &&
+      convidado.menorDe10 !== true
   ).length;
 
   cardCriancas.textContent = totalCriancas;
@@ -232,9 +244,11 @@ function obterListaFiltradaEOrdenada() {
 
     let statusBate = true;
     if (statusEscolhido === "confirmados") {
-      statusBate = convidado.confirmou === true;
+      statusBate = convidado.respondeu && convidado.confirmou === true;
     } else if (statusEscolhido === "nao-confirmados") {
-      statusBate = convidado.confirmou !== true;
+      statusBate = convidado.respondeu && convidado.confirmou === false;
+    } else if (statusEscolhido === "sem-confirmacao") {
+      statusBate = !convidado.respondeu;
     }
 
     return nomeBate && familiaBate && statusBate;
@@ -275,10 +289,20 @@ function renderizarTabela(lista) {
   lista.forEach((convidado) => {
     const linha = document.createElement("tr");
 
-    const classeStatus = convidado.confirmou
-      ? "status-confirmado"
-      : "status-nao-confirmado";
-    const textoStatus = convidado.confirmou ? "Confirmado" : "Não confirmado";
+    // Define o texto e a cor do status, com base nos 3 estados possíveis
+    let classeStatus;
+    let textoStatus;
+
+    if (!convidado.respondeu) {
+      classeStatus = "status-sem-confirmacao";
+      textoStatus = "Sem confirmação";
+    } else if (convidado.confirmou) {
+      classeStatus = "status-confirmado";
+      textoStatus = "Confirmado";
+    } else {
+      classeStatus = "status-nao-confirmado";
+      textoStatus = "Não confirmado";
+    }
 
     // Se for criança menor de 10 anos, adiciona a etiqueta ao lado do nome
     const etiquetaCrianca = convidado.menorDe10
@@ -315,13 +339,24 @@ function aplicarFiltrosEOrdenacao() {
 // "só confirmados" (que ignora os filtros da tela).
 // =========================================================
 function gerarArquivoExcel(lista, nomeDoArquivo) {
-  const dadosDaPlanilha = lista.map((convidado) => ({
-    Família: convidado.nomeFamilia,
-    Pessoa: convidado.nome,
-    "Criança (<10)": convidado.menorDe10 ? "Sim" : "Não",
-    Status: convidado.confirmou ? "Confirmado" : "Não confirmado",
-    "Data confirmação": formatarData(convidado.dataConfirmacao)
-  }));
+  const dadosDaPlanilha = lista.map((convidado) => {
+    let textoStatus;
+    if (!convidado.respondeu) {
+      textoStatus = "Sem confirmação";
+    } else if (convidado.confirmou) {
+      textoStatus = "Confirmado";
+    } else {
+      textoStatus = "Não confirmado";
+    }
+
+    return {
+      Família: convidado.nomeFamilia,
+      Pessoa: convidado.nome,
+      "Criança (<10)": convidado.menorDe10 ? "Sim" : "Não",
+      Status: textoStatus,
+      "Data confirmação": formatarData(convidado.dataConfirmacao)
+    };
+  });
 
   const planilha = XLSX.utils.json_to_sheet(dadosDaPlanilha);
   const arquivo = XLSX.utils.book_new();
@@ -348,7 +383,7 @@ function exportarParaExcel() {
 // =========================================================
 function exportarApenasConfirmados() {
   const apenasConfirmados = todosOsConvidados.filter(
-    (convidado) => convidado.confirmou === true
+    (convidado) => convidado.respondeu && convidado.confirmou === true
   );
   gerarArquivoExcel(apenasConfirmados, "confirmados-2-anos-da-memel.xlsx");
 }
