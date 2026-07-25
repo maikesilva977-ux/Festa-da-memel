@@ -77,6 +77,21 @@ let listaFamilias = [];
 let todosOsConvidados = [];
 
 // =========================================================
+// Função: valorCampoIgnorandoCase
+// Procura um campo dentro de um objeto (documento do Firestore)
+// sem se importar com maiúsculas/minúsculas no NOME do campo.
+// Ex: se o campo foi cadastrado como "Menorde10" ou "MENORDE10"
+// ou "MenorDe10", essa função encontra do mesmo jeito.
+// =========================================================
+function valorCampoIgnorandoCase(objeto, nomeCampo) {
+  const chaveEncontrada = Object.keys(objeto || {}).find(
+    (chave) => chave.toLowerCase() === nomeCampo.toLowerCase()
+  );
+
+  return chaveEncontrada ? objeto[chaveEncontrada] : undefined;
+}
+
+// =========================================================
 // Função: carregarFamilias
 // Busca no Firestore todas as famílias e seus membros,
 // igual o site principal faz, e guarda em listaFamilias.
@@ -124,8 +139,10 @@ function montarListaDeConvidados() {
       // cadastrado manualmente, então não confundimos os dois.
       respondeu: !!membro.DataConfirmacao,
       // Se o campo MenorDe10 não existir no Firestore, tratamos
-      // como false (ou seja, conta como adulto/criança maior)
-      menorDe10: membro.MenorDe10 === true,
+      // como false (ou seja, conta como adulto/criança maior).
+      // Usamos busca flexível porque esse campo pode ter sido
+      // cadastrado como "Menorde10", "MenorDe10", etc.
+      menorDe10: valorCampoIgnorandoCase(membro, "MenorDe10") === true,
       // Converte o Timestamp do Firestore para um objeto Date
       // do JavaScript (ou null, se ainda não confirmou)
       dataConfirmacao: membro.DataConfirmacao
