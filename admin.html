@@ -19,20 +19,6 @@
   <!-- Container onde os confetes caem -->
   <div id="confete-container"></div>
 
-  <!-- DIAGNÓSTICO TEMPORÁRIO: captura qualquer erro de JavaScript
-       e mostra na tela, para descobrir o que está impedindo o
-       botão "Entrar" de funcionar -->
-  <script>
-    window.addEventListener("error", function (evento) {
-      alert(
-        "ERRO DETECTADO:\n" +
-        evento.message +
-        "\nArquivo: " + evento.filename +
-        "\nLinha: " + evento.lineno
-      );
-    });
-  </script>
-
   <!-- ============================= -->
   <!-- TELA DE LOGIN                -->
   <!-- ============================= -->
