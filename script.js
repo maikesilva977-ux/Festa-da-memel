@@ -30,7 +30,7 @@ import {
 // convidados (ex: junto do link do site).
 // Para trocar o código, basta mudar o valor abaixo.
 // =========================================================
-const CODIGO_ACESSO = "1608";
+const CODIGO_ACESSO = "0406";
 
 // Data e horário limite para confirmação de presença.
 // Depois desse momento, os convidados não conseguem mais
